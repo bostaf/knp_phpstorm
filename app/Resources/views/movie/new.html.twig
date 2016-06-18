@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>New Samuel L Jackson movie</h1>
+    <a href="{{ path('movies_list') }}">Back to list</a>
+
+    {{ include('movie/_form.html.twig') }}
+
+    <h3>{{ quote|upper }}</h3>
+    <p>
+        Today is: {{ 'now'|date('Y-m-d') }}
+    </p>
+{% endblock %}
