@@ -5,11 +5,9 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Movie;
 use AppBundle\Form\MovieType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
-class MovieController extends Controller
+class MovieController extends BaseController
 {
     /**
      * @Route("/movies/new", name="movies_new")
@@ -21,16 +19,20 @@ class MovieController extends Controller
         $form = $this->createForm(new MovieType(), $movie);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            // todo - do saving
+            $em = $this->getEntityManager();
+            $em->persist($movie);
+            $em->flush();
 
-            $this->addFlash('success', 'Sam would be proud');
+            $message = 'Sam would be proud';
+            $this->addFlash('success', $message);
             $this->redirectToRoute('movies_list', array());
         }
 
         return $this->render('movie/new.html.twig', [
-            'quote' => 'If my answers frighten you then you should cease asking scary questions. (Pulp Fiction)',
-            'form' => $form->createView()
-        ]);
+                'quote' => 'If my answers frighten you then you should cease asking scary questions. (Pulp Fiction)',
+                'form' => $form->createView()
+            ]
+        );
     }
 
     /**
@@ -38,6 +40,12 @@ class MovieController extends Controller
      */
     public function listAction()
     {
-        return new Response('TODO');
+        $em = $this->getEntityManager();
+        $movies = $em->getRepository('AppBundle:Movie')
+            ->findAll();
+
+        return $this->render('movie/list.html.twig', array(
+            'movies' => $movies
+        ));
     }
 }
