@@ -29,7 +29,7 @@ class MovieController extends BaseController
         }
 
         return $this->render('movie/new.html.twig', [
-                'quote' => 'If my answers frighten you then you should cease asking scary questions. (Pulp Fiction)',
+                'quote' => $this->get('quote_generator')->getRandomQuote(),
                 'form' => $form->createView()
             ]
         );
